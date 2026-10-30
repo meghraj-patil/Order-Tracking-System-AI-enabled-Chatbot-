@@ -1,11 +1,22 @@
-const { getAvailableTools } = require("./services/geminiService");
+require("dotenv").config();
 
-async function test() {
+const { GoogleGenAI } = require("@google/genai");
 
-    const tools = await getAvailableTools();
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+});
 
-    console.log(tools);
+async function testGemini() {
+    try {
+        const response = await ai.models.generateContent({
+            model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+            contents: "Say hello in one sentence.",
+        });
 
+        console.log("Gemini response:", response.text);
+    } catch (error) {
+        console.error("Gemini test failed:", error.message);
+    }
 }
 
-test();
+testGemini();
